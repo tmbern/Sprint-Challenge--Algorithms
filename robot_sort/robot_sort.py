@@ -96,9 +96,47 @@ class SortingRobot:
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        # set the light on. This will be the trigger to stay in the loop
+        self.set_light_on()
 
+        while self.light_is_on():
+            # turn light off
+            self.set_light_off()
+
+            # robot isnt holding an item right now so need to pick up the first item
+            self.swap_item()
+            
+            # if the bot can move right we will move thru the list from 
+            # left to right
+            while self.can_move_right():
+                
+                self.move_right()
+
+
+                # compare our held item to the item in the list. If the held item is greater than the 
+                # item in the list we want to pick up the smaller item.
+                # when we get to where we cant move right any more we will take that smaller item back to
+                # the front of the list. 
+                if self.compare_item() == 1:
+                    self.swap_item()
+                    self.set_light_on()
+
+
+            # now that we are holding a small item. We want to move back to the front of the list
+            # and trade with the None item that we put at previous iterations index.
+            # This way we will always end with the None in the bots hand and not in the list.  
+            # list and start process over. 
+            while self.can_move_left() and self.compare_item() != None:
+                self.move_left()
+            
+            # pick up the none value
+            self.swap_item()
+
+            # move to the right and start the process over
+            self.move_right()
+        return
+
+ 
 
 if __name__ == "__main__":
     # Test our your implementation from the command line
